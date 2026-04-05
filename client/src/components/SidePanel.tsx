@@ -32,7 +32,7 @@ export default function SidePanel({ person, activeEvent, onClose, onEventSelect 
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: 400, opacity: 0 }}
         transition={{ duration: 0.4, ease }}
-        className="absolute top-0 right-0 bottom-0 w-[400px] z-[900] bg-white/95 backdrop-blur-xl border-l border-emerald-100 shadow-2xl shadow-emerald-100/20 flex flex-col"
+        className="absolute top-0 right-0 bottom-0 w-[380px] z-[900] bg-white/95 backdrop-blur-xl border-l border-emerald-100 flex flex-col"
       >
         {/* Header */}
         <div className="p-5 pb-4 border-b border-emerald-50">

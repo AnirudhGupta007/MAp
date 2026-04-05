@@ -46,9 +46,9 @@ export default function Timeline({ events, activeEventId, onEventSelect }: Props
       initial={{ y: 40, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.3, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="absolute bottom-0 left-0 right-0 z-[800] px-5 pb-5"
+      className="absolute bottom-0 left-0 right-[400px] z-[800] px-5 pb-5"
     >
-      <div className="rounded-2xl bg-white/90 backdrop-blur-xl border border-emerald-100 shadow-xl shadow-emerald-100/20 px-5 py-3.5 mx-auto" style={{ maxWidth: "calc(100% - 420px)" }}>
+      <div className="rounded-2xl bg-white/90 backdrop-blur-xl border border-emerald-100 shadow-xl shadow-emerald-100/20 px-5 py-3.5 mx-auto max-w-3xl">
         <div className="flex items-center gap-3">
           {/* Play/Pause */}
           <button

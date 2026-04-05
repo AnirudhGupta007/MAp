@@ -88,8 +88,8 @@ export default function LandingPage({ onEnterApp }: Props) {
       </motion.nav>
 
       {/* ═══ HERO ═══ */}
-      <section className="relative pt-20 md:pt-28 pb-8 px-6">
-        <div className="max-w-3xl mx-auto text-center">
+      <section className="relative pt-24 md:pt-32 pb-8 px-6">
+        <div className="max-w-5xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -120,7 +120,7 @@ export default function LandingPage({ onEnterApp }: Props) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.4, ease }}
-            className="text-[17px] md:text-[18px] text-emerald-800/50 mt-5 leading-[1.7] max-w-lg mx-auto"
+            className="text-[17px] md:text-[18px] text-emerald-800/50 mt-5 leading-[1.7] max-w-xl mx-auto"
           >
             Search any historical figure. AI generates their journey —
             battles, coronations, meetings — on an interactive map.
@@ -152,7 +152,7 @@ export default function LandingPage({ onEnterApp }: Props) {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.7, ease }}
-          className="mt-16 max-w-4xl mx-auto"
+          className="mt-16 max-w-5xl mx-auto"
         >
           <InteractiveCard className="rounded-2xl overflow-hidden border border-emerald-100 shadow-2xl shadow-emerald-100/30 bg-white">
             <div className="relative aspect-[16/9]"
@@ -246,8 +246,8 @@ export default function LandingPage({ onEnterApp }: Props) {
       </section>
 
       {/* ═══ HOW IT WORKS — INTERACTIVE ═══ */}
-      <section id="features" className="py-28 px-6">
-        <div className="max-w-4xl mx-auto">
+      <section id="features" className="py-32 px-6">
+        <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -314,8 +314,8 @@ export default function LandingPage({ onEnterApp }: Props) {
       </section>
 
       {/* ═══ FIGURES ═══ */}
-      <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto">
+      <section className="py-32 px-6">
+        <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -378,13 +378,13 @@ export default function LandingPage({ onEnterApp }: Props) {
       </section>
 
       {/* ═══ BOTTOM CTA ═══ */}
-      <section className="py-28 px-6">
+      <section className="py-32 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease }}
-          className="max-w-2xl mx-auto text-center"
+          className="max-w-3xl mx-auto text-center"
         >
           <div className="p-12 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 relative overflow-hidden shadow-2xl shadow-emerald-200/40">
             {/* Pattern overlay */}

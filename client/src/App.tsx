@@ -60,46 +60,54 @@ function App() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, ease }}
-      className="relative h-screen w-screen overflow-hidden bg-[#F0FDF4]"
+      className="h-screen w-screen overflow-hidden bg-gradient-to-br from-[#ECFDF5] via-[#F0FDF4] to-[#E8F5E9] flex items-center justify-center p-5"
     >
-      <MapView events={person?.events || []} activeEventId={activeEvent?.id || null} onEventClick={handleEventClick} />
+      {/* Centered map container */}
+      <div className="relative w-full h-full max-w-7xl mx-auto rounded-2xl overflow-hidden border border-emerald-100 shadow-2xl shadow-emerald-200/20 bg-white">
 
-      {/* Top loading bar */}
-      <AnimatePresence>
-        {isLoading && (
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 2, ease: "easeInOut" }}
-            className="absolute top-0 left-0 right-0 h-[3px] z-[1100] origin-left rounded-full"
-            style={{ background: "linear-gradient(90deg, #059669, #10B981, #34D399)" }}
-          />
+        {/* Map fills the card */}
+        <MapView events={person?.events || []} activeEventId={activeEvent?.id || null} onEventClick={handleEventClick} />
+
+        {/* Top loading bar */}
+        <AnimatePresence>
+          {isLoading && (
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 2, ease: "easeInOut" }}
+              className="absolute top-0 left-0 right-0 h-[3px] z-[1100] origin-left"
+              style={{ background: "linear-gradient(90deg, #059669, #10B981, #34D399)" }}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Back button */}
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          onClick={handleBackToLanding}
+          className="absolute top-4 left-4 z-[1000] px-4 py-2 rounded-full bg-white/90 backdrop-blur-xl border border-emerald-100 hover:border-emerald-200 text-emerald-600 hover:text-emerald-800 transition-all duration-200 text-[12px] font-medium shadow-sm shadow-emerald-100/20 hover:shadow-md"
+        >
+          ← Home
+        </motion.button>
+
+        {/* Search bar */}
+        <SearchBar onSearch={handleSearch} isLoading={isLoading} />
+
+        {/* Side panel */}
+        <AnimatePresence>
+          {person && (
+            <SidePanel person={person} activeEvent={activeEvent} onClose={handleClosePanel} onEventSelect={handleEventClick} />
+          )}
+        </AnimatePresence>
+
+        {/* Timeline */}
+        {person && person.events.length > 0 && (
+          <Timeline events={person.events} activeEventId={activeEvent?.id || null} onEventSelect={handleEventClick} />
         )}
-      </AnimatePresence>
-
-      {/* Back button */}
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        onClick={handleBackToLanding}
-        className="absolute top-5 left-5 z-[1000] px-4 py-2 rounded-full bg-white/90 backdrop-blur-xl border border-emerald-100 hover:border-emerald-200 text-emerald-600 hover:text-emerald-800 transition-all duration-200 text-[12px] font-medium shadow-sm shadow-emerald-100/20"
-      >
-        ← Home
-      </motion.button>
-
-      <SearchBar onSearch={handleSearch} isLoading={isLoading} />
-
-      <AnimatePresence>
-        {person && (
-          <SidePanel person={person} activeEvent={activeEvent} onClose={handleClosePanel} onEventSelect={handleEventClick} />
-        )}
-      </AnimatePresence>
-
-      {person && person.events.length > 0 && (
-        <Timeline events={person.events} activeEventId={activeEvent?.id || null} onEventSelect={handleEventClick} />
-      )}
+      </div>
     </motion.div>
   );
 }
