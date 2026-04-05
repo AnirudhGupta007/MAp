@@ -1,0 +1,198 @@
+{
+  "person": "Rani Lakshmibai",
+  "title": "The Heroic Queen",
+  "born": 1828,
+  "died": 1858,
+  "portrait": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Rani_of_Jhansi.jpg",
+  "summary": "Rani Lakshmibai, the Queen of Jhansi, was a prominent figure in the Indian Rebellion of 1857. She is remembered as a symbol of resistance against British rule and for her bravery in battle, becoming an icon of Indian nationalism.",
+  "events": [
+    {
+      "id": 1,
+      "title": "Birth of Manikarnika Tambe",
+      "year": 1828,
+      "lat": 19.076,
+      "lng": 72.8777,
+      "place": "Varanasi, India",
+      "description": "Manikarnika Tambe, later known as Rani Lakshmibai, was born in Varanasi to a Marathi Brahmin family. Her father, Moropant Tambe, served in the court of Peshwa Baji Rao II.",
+      "people": [
+        "Moropant Tambe",
+        "Bhagirathi Sapre"
+      ],
+      "type": "birth",
+      "highlight": false,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Lakshmibai"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Marriage to Maharaja Gangadhar Rao",
+      "year": 1842,
+      "lat": 25.4484,
+      "lng": 78.5722,
+      "place": "Jhansi, India",
+      "description": "Manikarnika married Maharaja Gangadhar Rao Newalkar, the Maharaja of Jhansi, and became the Rani (Queen) of Jhansi. After her marriage, she was named Lakshmibai.",
+      "people": [
+        "Maharaja Gangadhar Rao"
+      ],
+      "type": "meeting",
+      "highlight": true,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Lakshmibai"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Adoption of Damodar Rao",
+      "year": 1853,
+      "lat": 25.4484,
+      "lng": 78.5722,
+      "place": "Jhansi, India",
+      "description": "Maharaja Gangadhar Rao and Rani Lakshmibai adopted a child, Anand Rao, who was renamed Damodar Rao, a day before the Maharaja's death. The adoption was performed in the presence of British political officers to ensure its legality.",
+      "people": [
+        "Maharaja Gangadhar Rao",
+        "Damodar Rao"
+      ],
+      "type": "meeting",
+      "highlight": false,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Lakshmibai"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "British Annexation of Jhansi",
+      "year": 1854,
+      "lat": 25.4484,
+      "lng": 78.5722,
+      "place": "Jhansi, India",
+      "description": "After the death of Maharaja Gangadhar Rao, the British East India Company, under the Doctrine of Lapse, refused to recognize Damodar Rao as the heir and annexed Jhansi. Rani Lakshmibai was ordered to leave the fort and was given a pension.",
+      "people": [
+        "Lord Dalhousie"
+      ],
+      "type": "meeting",
+      "highlight": true,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Doctrine_of_lapse"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Jhansi Joins the Rebellion",
+      "year": 1857,
+      "lat": 25.4484,
+      "lng": 78.5722,
+      "place": "Jhansi, India",
+      "description": "When the Indian Rebellion of 1857 broke out, Rani Lakshmibai reluctantly agreed to lead the defense of Jhansi. She was forced to take action due to the mutinying sepoys in the city.",
+      "people": [],
+      "type": "battle",
+      "highlight": false,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Indian_Rebellion_of_1857"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Siege of Jhansi",
+      "year": 1858,
+      "lat": 25.4484,
+      "lng": 78.5722,
+      "place": "Jhansi Fort, Jhansi, India",
+      "description": "Sir Hugh Rose besieged Jhansi in March 1858. Rani Lakshmibai declared that she would not surrender Jhansi and fought valiantly to defend the city against the British forces.",
+      "people": [
+        "Sir Hugh Rose"
+      ],
+      "type": "battle",
+      "highlight": false,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Siege_of_Jhansi"
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Escape from Jhansi",
+      "year": 1858,
+      "lat": 25.4484,
+      "lng": 78.5722,
+      "place": "Jhansi, India",
+      "description": "Finding the defense of Jhansi untenable, Rani Lakshmibai, along with her adopted son Damodar Rao, escaped from the fort during the night. She fled to Kalpi to regroup.",
+      "people": [
+        "Damodar Rao"
+      ],
+      "type": "journey",
+      "highlight": false,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Lakshmibai"
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Capture of Kalpi",
+      "year": 1858,
+      "lat": 26.1,
+      "lng": 79.7333,
+      "place": "Kalpi, India",
+      "description": "Rani Lakshmibai and Tatya Tope captured Kalpi, a strategic location, after escaping from Jhansi. This gave them a temporary advantage against the British.",
+      "people": [
+        "Tatya Tope"
+      ],
+      "type": "battle",
+      "highlight": false,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Tatya_Tope"
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Capture of Gwalior",
+      "year": 1858,
+      "lat": 26.2183,
+      "lng": 78.1828,
+      "place": "Gwalior, India",
+      "description": "Rani Lakshmibai, along with Tatya Tope and other rebel leaders, captured the strategic city of Gwalior. This provided them with much-needed resources, but it was a temporary victory.",
+      "people": [
+        "Tatya Tope"
+      ],
+      "type": "battle",
+      "highlight": true,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Lakshmibai"
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Death in Battle at Kotah-ki-Serai",
+      "year": 1858,
+      "lat": 26.2183,
+      "lng": 78.1828,
+      "place": "Kotah-ki-Serai, Gwalior, India",
+      "description": "Rani Lakshmibai died in battle at Kotah-ki-Serai near Gwalior while fighting against the British forces. She was reportedly dressed as a soldier and fought bravely until her last breath.",
+      "people": [],
+      "type": "death",
+      "highlight": true,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Lakshmibai"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "person": "Bhagat Singh",
+  "title": "Shaheed-e-Azam",
+  "born": 1907,
+  "died": 1931,
+  "portrait": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Bhagat_Singh_in_his_youth.jpg/440px-Bhagat_Singh_in_his_youth.jpg",
+  "summary": "Bhagat Singh was an Indian revolutionary socialist who participated in the Indian independence movement. He was executed for his involvement in the Lahore Conspiracy case. He is considered a national hero in India.",
+  "events": [
+    {
+      "id": 1,
+      "title": "Birth of Bhagat Singh",
+      "year": 1907,
+      "lat": 30.9579,
+      "lng": 74.7429,
+      "place": "Banga, Punjab Province, British India",
+      "description": "Bhagat Singh was born in Banga village, Lyallpur district, Punjab Province (present-day Pakistan). His birthdate is debated as September 27 or 28, 1907. He was born into a Sikh family with a history of involvement in independence activities.",
+      "people": [],
+      "type": "birth",
+      "highlight": true,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Bhagat_Singh"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Joins the Hindustan Republican Association",
+      "year": 1926,
+      "lat": 28.6139,
+      "lng": 77.209,
+      "place": "Kanpur, United Provinces, British India",
+      "description": "Bhagat Singh joined the Hindustan Republican Association (HRA), later the Hindustan Socialist Republican Association (HSRA), a revolutionary organization advocating for complete independence. He met prominent revolutionaries like Chandrashekhar Azad and Sukhdev Thapar during this period.",
+      "people": [
+        "Chandrashekhar Azad",
+        "Sukhdev Thapar"
+      ],
+      "type": "meeting",
+      "highlight": false,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Hindustan_Socialist_Republican_Association"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Assassination of John Saunders",
+      "year": 1928,
+      "lat": 31.5497,
+      "lng": 74.3436,
+      "place": "Lahore, Punjab Province, British India",
+      "description": "Bhagat Singh, along with Sukhdev and Shivaram Rajguru, assassinated John Saunders, a British police officer, to avenge the death of Lala Lajpat Rai who died during a protest against the Simon Commission. This act was a major turning point in their revolutionary activities.",
+      "people": [
+        "Sukhdev Thapar",
+        "Shivaram Rajguru",
+        "John Saunders"
+      ],
+      "type": "battle",
+      "highlight": true,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Killing_of_John_Saunders"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Bombing of the Central Legislative Assembly",
+      "year": 1929,
+      "lat": 28.6139,
+      "lng": 77.209,
+      "place": "Delhi, India",
+      "description": "Bhagat Singh and Batukeshwar Dutt threw bombs into the Central Legislative Assembly while shouting slogans. Their intention was not to kill but to \"make the deaf hear\" and protest against oppressive legislation. They surrendered after the bombing.",
+      "people": [
+        "Batukeshwar Dutt"
+      ],
+      "type": "battle",
+      "highlight": true,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/1929_Assembly_bombing"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Lahore Conspiracy Case Trial",
+      "year": 1930,
+      "lat": 31.5497,
+      "lng": 74.3436,
+      "place": "Lahore Central Jail, Lahore, Punjab, British India",
+      "description": "Bhagat Singh, Sukhdev, and Rajguru were tried for the assassination of John Saunders in what became known as the Lahore Conspiracy Case. The trial gained significant public attention and further fueled the independence movement.",
+      "people": [
+        "Sukhdev Thapar",
+        "Shivaram Rajguru"
+      ],
+      "type": "meeting",
+      "highlight": false,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Bhagat_Singh"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Hunger Strike in Jail",
+      "year": 1929,
+      "lat": 31.5497,
+      "lng": 74.3436,
+      "place": "Lahore Central Jail, Lahore, Punjab, British India",
+      "description": "Bhagat Singh and other prisoners began a hunger strike in jail to protest against the discriminatory treatment of Indian prisoners compared to European prisoners. He demanded political prisoner status.",
+      "people": [],
+      "type": "protest",
+      "highlight": false,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/1929_Prison_Strike"
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Execution of Bhagat Singh",
+      "year": 1931,
+      "lat": 31.5497,
+      "lng": 74.3436,
+      "place": "Lahore Central Jail, Lahore, Punjab, British India",
+      "description": "Bhagat Singh, along with Sukhdev and Rajguru, was executed by hanging in Lahore Central Jail on March 23, 1931. Their execution sparked widespread protests and further intensified the call for Indian independence.",
+      "people": [
+        "Sukhdev Thapar",
+        "Shivaram Rajguru"
+      ],
+      "type": "death",
+      "highlight": true,
+      "images": [],
+      "videos": [],
+      "links": [
+        "https://en.wikipedia.org/wiki/Bhagat_Singh"
+      ]
+    }
+  ]
+}
