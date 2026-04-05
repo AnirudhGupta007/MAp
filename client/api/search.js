@@ -1,8 +1,7 @@
 import OpenAI from "openai";
+import { Redis } from "@upstash/redis";
 import fs from "fs";
 import path from "path";
-
-const CACHE_DIR = path.join(process.cwd(), "server_cache");
 
 const PROMPT_TEMPLATE = (name) => `You are a historical data API. Return ONLY valid JSON (no markdown, no code blocks) for the historical figure "${name}".
 
@@ -35,9 +34,6 @@ Return this exact JSON structure:
 
 Include 8-15 major life events in chronological order. Ensure lat/lng coordinates are accurate real-world locations. Mark 2-3 events as highlighted. Include birth and death events.`;
 
-// In-memory cache for serverless (file cache won't persist on Vercel)
-const memoryCache = {};
-
 // Try to load from bundled cache files
 function loadBundledCache(name) {
   const key = name.toLowerCase().replace(/\s+/g, "_");
@@ -52,19 +48,38 @@ function loadBundledCache(name) {
   return null;
 }
 
+function getRedis() {
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    return null;
+  }
+  return new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  });
+}
+
 export default async function handler(req, res) {
   const { name } = req.query;
   if (!name) return res.status(400).json({ error: "Name parameter required" });
 
-  const cacheKey = name.toLowerCase().replace(/\s+/g, "_");
+  const cacheKey = `geotimeline:${name.toLowerCase().replace(/\s+/g, "_")}`;
 
-  // Check bundled cache first (pre-generated data)
+  // 1. Check bundled cache (pre-generated JSON files)
   const bundled = loadBundledCache(name);
   if (bundled) return res.json(bundled);
 
-  // Check memory cache
-  if (memoryCache[cacheKey]) return res.json(memoryCache[cacheKey]);
+  // 2. Check Upstash Redis cache
+  const redis = getRedis();
+  if (redis) {
+    try {
+      const cached = await redis.get(cacheKey);
+      if (cached) return res.json(cached);
+    } catch (e) {
+      console.error("Redis read error:", e.message);
+    }
+  }
 
+  // 3. Fetch from OpenRouter
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) return res.status(500).json({ error: "OPENROUTER_API_KEY not set" });
 
@@ -83,7 +98,15 @@ export default async function handler(req, res) {
     let cleaned = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     const data = JSON.parse(cleaned);
 
-    memoryCache[cacheKey] = data;
+    // 4. Save to Redis (no expiry — persist forever)
+    if (redis) {
+      try {
+        await redis.set(cacheKey, data);
+      } catch (e) {
+        console.error("Redis write error:", e.message);
+      }
+    }
+
     res.json(data);
   } catch (err) {
     console.error("OpenRouter API error:", err.message);
