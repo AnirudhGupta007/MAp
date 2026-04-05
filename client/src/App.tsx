@@ -8,12 +8,13 @@ import SidePanel from "./components/SidePanel";
 import Timeline from "./components/Timeline";
 import type { PersonData, HistoricalEvent } from "./types";
 
+const ease = "easeOut" as const;
+
 function App() {
   const [person, setPerson] = useState<PersonData | null>(null);
   const [activeEvent, setActiveEvent] = useState<HistoricalEvent | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showLanding, setShowLanding] = useState(true);
-  const [appMode, setAppMode] = useState(false); // false = landing page, true = map explorer
+  const [appMode, setAppMode] = useState(false);
 
   const handleSearch = useCallback(async (name: string) => {
     setIsLoading(true);
@@ -21,11 +22,8 @@ function App() {
     try {
       const res = await axios.get(`/api/search?name=${encodeURIComponent(name)}`);
       setPerson(res.data);
-      setShowLanding(false);
       const firstHighlight = res.data.events.find((e: HistoricalEvent) => e.highlight);
-      if (firstHighlight) {
-        setTimeout(() => setActiveEvent(firstHighlight), 1500);
-      }
+      if (firstHighlight) setTimeout(() => setActiveEvent(firstHighlight), 1200);
     } catch (err) {
       console.error("Search failed:", err);
     } finally {
@@ -33,156 +31,74 @@ function App() {
     }
   }, []);
 
-  const handleEventClick = useCallback((event: HistoricalEvent) => {
-    setActiveEvent(event);
-  }, []);
+  const handleEventClick = useCallback((event: HistoricalEvent) => setActiveEvent(event), []);
 
   const handleClosePanel = useCallback(() => {
     setActiveEvent(null);
     setPerson(null);
-    setShowLanding(true);
-  }, []);
-
-  const handleEnterApp = useCallback(() => {
-    setAppMode(true);
   }, []);
 
   const handleBackToLanding = useCallback(() => {
     setAppMode(false);
     setPerson(null);
     setActiveEvent(null);
-    setShowLanding(true);
   }, []);
 
-  // ═══════════ LANDING PAGE ═══════════
   if (!appMode) {
     return (
       <AnimatePresence mode="wait">
-        <motion.div
-          key="landing"
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <LandingPage onEnterApp={handleEnterApp} />
+        <motion.div key="landing" exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+          <LandingPage onEnterApp={() => setAppMode(true)} />
         </motion.div>
       </AnimatePresence>
     );
   }
 
-  // ═══════════ MAP EXPLORER ═══════════
   return (
     <motion.div
       key="app"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      className="relative h-screen w-screen overflow-hidden bg-[#06060a]"
+      transition={{ duration: 0.5, ease }}
+      className="relative h-screen w-screen overflow-hidden bg-[#0a0a0a]"
     >
-      {/* Map */}
-      <MapView
-        events={person?.events || []}
-        activeEventId={activeEvent?.id || null}
-        onEventClick={handleEventClick}
-      />
+      <MapView events={person?.events || []} activeEventId={activeEvent?.id || null} onEventClick={handleEventClick} />
 
-      {/* Landing hero overlay (before search) */}
-      <AnimatePresence>
-        {showLanding && !isLoading && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
-            className="absolute inset-0 z-[500] flex items-center justify-center pointer-events-none"
-          >
-            <div className="text-center">
-              <motion.h1
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
-                className="text-6xl font-bold text-white/90 tracking-tight"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-              >
-                Geo
-                <span
-                  style={{
-                    background: "linear-gradient(135deg, #00d4ff, #a78bfa)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  Timeline
-                </span>
-              </motion.h1>
-              <motion.p
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-                className="text-white/25 text-lg mt-4 font-light tracking-wide"
-              >
-                Search a historical figure to begin
-              </motion.p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Loading overlay */}
+      {/* Top loading bar */}
       <AnimatePresence>
         {isLoading && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-[600] flex items-center justify-center bg-[#06060a]/60 backdrop-blur-sm"
-          >
-            <div className="text-center">
-              <motion.div
-                className="w-14 h-14 border-2 border-[#00d4ff]/20 border-t-[#00d4ff] rounded-full mx-auto"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              />
-              <p className="text-white/30 text-sm mt-4 font-light tracking-wide">
-                Exploring history...
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Back to landing button */}
-      <motion.button
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.5 }}
-        onClick={handleBackToLanding}
-        className="absolute top-6 left-6 z-[1000] glass rounded-xl px-3 py-2 text-white/40 hover:text-white/80 transition-all duration-200 text-sm flex items-center gap-2"
-      >
-        <span>←</span>
-        <span className="text-xs">Home</span>
-      </motion.button>
-
-      {/* Search bar */}
-      <SearchBar onSearch={handleSearch} isLoading={isLoading} />
-
-      {/* Side panel */}
-      <AnimatePresence>
-        {person && (
-          <SidePanel
-            person={person}
-            activeEvent={activeEvent}
-            onClose={handleClosePanel}
-            onEventSelect={handleEventClick}
+            transition={{ duration: 2, ease: "easeInOut" }}
+            className="absolute top-0 left-0 right-0 h-[2px] z-[1100] origin-left"
+            style={{ background: "linear-gradient(90deg, #8b5cf6, #6366f1)" }}
           />
         )}
       </AnimatePresence>
 
-      {/* Timeline */}
+      {/* Back button */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        onClick={handleBackToLanding}
+        className="absolute top-5 left-5 z-[1000] px-3 py-1.5 rounded-md bg-[#141414]/80 backdrop-blur-md border border-white/[0.06] hover:border-white/[0.1] text-white/40 hover:text-white/70 transition-all duration-150 text-[12px] font-medium"
+      >
+        ← Home
+      </motion.button>
+
+      <SearchBar onSearch={handleSearch} isLoading={isLoading} />
+
+      <AnimatePresence>
+        {person && (
+          <SidePanel person={person} activeEvent={activeEvent} onClose={handleClosePanel} onEventSelect={handleEventClick} />
+        )}
+      </AnimatePresence>
+
       {person && person.events.length > 0 && (
-        <Timeline
-          events={person.events}
-          activeEventId={activeEvent?.id || null}
-          onEventSelect={handleEventClick}
-        />
+        <Timeline events={person.events} activeEventId={activeEvent?.id || null} onEventSelect={handleEventClick} />
       )}
     </motion.div>
   );

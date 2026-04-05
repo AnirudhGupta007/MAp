@@ -8,21 +8,27 @@ interface Props {
   onClick: () => void;
 }
 
-function createGlowIcon(highlight: boolean, isActive: boolean) {
-  const className = `glow-marker${highlight ? " highlight" : ""}${isActive ? " active" : ""}`;
-  const size = highlight ? 18 : 14;
+function createIcon(highlight: boolean, isActive: boolean) {
+  const cls = `geo-marker${highlight ? " highlight" : ""}${isActive ? " active" : ""}`;
+  const size = isActive ? 12 : highlight ? 12 : 10;
   return L.divIcon({
     className: "",
-    html: `
-      <div class="${className}" style="position:relative">
-        <div class="marker-ring"></div>
-        ${highlight ? '<div class="marker-ring" style="animation-delay:1s"></div>' : ""}
-      </div>
-    `,
+    html: `<div class="${cls}"></div>`,
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
   });
 }
+
+const TYPE_LABELS: Record<string, { label: string; color: string }> = {
+  birth: { label: "Birth", color: "#22c55e" },
+  death: { label: "Death", color: "#64748b" },
+  battle: { label: "Battle", color: "#ef4444" },
+  coronation: { label: "Coronation", color: "#f59e0b" },
+  meeting: { label: "Meeting", color: "#6366f1" },
+  journey: { label: "Journey", color: "#8b5cf6" },
+  achievement: { label: "Achievement", color: "#22c55e" },
+  construction: { label: "Construction", color: "#f97316" },
+};
 
 export default function GlowMarker({ event, isActive, onClick }: Props) {
   const map = useMap();
@@ -30,51 +36,30 @@ export default function GlowMarker({ event, isActive, onClick }: Props) {
   const handleClick = () => {
     onClick();
     map.flyTo([event.lat, event.lng], Math.max(map.getZoom(), 7), {
-      duration: 1.5,
-      easeLinearity: 0.25,
+      duration: 1.2,
+      easeLinearity: 0.3,
     });
   };
 
-  const typeEmoji: Record<string, string> = {
-    birth: "👶",
-    death: "⚰️",
-    battle: "⚔️",
-    coronation: "👑",
-    meeting: "🤝",
-    journey: "🧭",
-    achievement: "🏆",
-    construction: "🏗️",
-  };
+  const t = TYPE_LABELS[event.type] || { label: event.type, color: "#8b5cf6" };
 
   return (
     <Marker
       position={[event.lat, event.lng]}
-      icon={createGlowIcon(event.highlight, isActive)}
+      icon={createIcon(event.highlight, isActive)}
       eventHandlers={{ click: handleClick }}
     >
-      <Popup
-        className="custom-popup"
-        closeButton={false}
-        offset={[0, -8]}
-      >
-        <div
-          className="glass rounded-xl px-4 py-3 min-w-[200px]"
-          style={{
-            background: "rgba(13, 13, 20, 0.9)",
-            border: "1px solid rgba(255,255,255,0.1)",
-          }}
-        >
+      <Popup className="custom-popup" closeButton={false} offset={[0, -6]}>
+        <div className="rounded-lg px-3.5 py-2.5 min-w-[180px]" style={{ background: "#141414", border: "1px solid rgba(255,255,255,0.06)" }}>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-base">{typeEmoji[event.type] || "📍"}</span>
-            <span
-              className="text-xs font-medium tracking-wider uppercase"
-              style={{ color: event.highlight ? "#ffb800" : "#00d4ff" }}
-            >
-              {event.year}
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: t.color }} />
+            <span className="text-[10px] font-medium tracking-wider uppercase" style={{ color: t.color }}>
+              {t.label}
             </span>
+            <span className="text-[10px] text-white/25 font-mono ml-auto">{event.year}</span>
           </div>
-          <div className="text-white text-sm font-medium">{event.title}</div>
-          <div className="text-white/50 text-xs mt-1">{event.place}</div>
+          <p className="text-white/90 text-[13px] font-medium leading-snug">{event.title}</p>
+          <p className="text-white/30 text-[11px] mt-0.5">{event.place}</p>
         </div>
       </Popup>
     </Marker>
