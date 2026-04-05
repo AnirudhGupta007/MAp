@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, Polyline, useMap } from "react-leaflet";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import GlowMarker from "./GlowMarker";
 import type { HistoricalEvent } from "../types";
 
@@ -9,12 +9,46 @@ interface Props {
   onEventClick: (event: HistoricalEvent) => void;
 }
 
-function FitBounds({ events }: { events: HistoricalEvent[] }) {
+// Spread out markers that share the same lat/lng so all are visible
+function spreadOverlappingEvents(events: HistoricalEvent[]): (HistoricalEvent & { displayLat: number; displayLng: number })[] {
+  const groups: Record<string, HistoricalEvent[]> = {};
+
+  // Group events by their coordinates
+  for (const event of events) {
+    const key = `${event.lat.toFixed(4)},${event.lng.toFixed(4)}`;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(event);
+  }
+
+  const result: (HistoricalEvent & { displayLat: number; displayLng: number })[] = [];
+
+  for (const key in groups) {
+    const group = groups[key];
+    if (group.length === 1) {
+      result.push({ ...group[0], displayLat: group[0].lat, displayLng: group[0].lng });
+    } else {
+      // Spread markers in a circle around the original point
+      const radius = 0.15 + group.length * 0.03; // degrees offset, scales with count
+      group.forEach((event, i) => {
+        const angle = (2 * Math.PI * i) / group.length - Math.PI / 2;
+        result.push({
+          ...event,
+          displayLat: event.lat + radius * Math.sin(angle),
+          displayLng: event.lng + radius * Math.cos(angle),
+        });
+      });
+    }
+  }
+
+  return result;
+}
+
+function FitBounds({ events }: { events: (HistoricalEvent & { displayLat: number; displayLng: number })[] }) {
   const map = useMap();
   useEffect(() => {
     if (events.length > 0) {
       const bounds = events.map(
-        (e) => [e.lat, e.lng] as [number, number]
+        (e) => [e.displayLat, e.displayLng] as [number, number]
       );
       map.flyToBounds(bounds, {
         padding: [80, 80],
@@ -28,9 +62,10 @@ function FitBounds({ events }: { events: HistoricalEvent[] }) {
 }
 
 export default function MapView({ events, activeEventId, onEventClick }: Props) {
-  const sortedEvents = [...events].sort((a, b) => a.year - b.year);
+  const spreadEvents = useMemo(() => spreadOverlappingEvents(events), [events]);
+  const sortedEvents = [...spreadEvents].sort((a, b) => a.year - b.year);
   const polylinePositions = sortedEvents.map(
-    (e) => [e.lat, e.lng] as [number, number]
+    (e) => [e.displayLat, e.displayLng] as [number, number]
   );
 
   return (
@@ -46,7 +81,7 @@ export default function MapView({ events, activeEventId, onEventClick }: Props) 
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           maxZoom={19}
         />
-        <FitBounds events={events} />
+        <FitBounds events={spreadEvents} />
 
         {/* Connection polyline */}
         {polylinePositions.length > 1 && (
@@ -63,10 +98,10 @@ export default function MapView({ events, activeEventId, onEventClick }: Props) 
         )}
 
         {/* Event markers */}
-        {events.map((event) => (
+        {spreadEvents.map((event) => (
           <GlowMarker
             key={event.id}
-            event={event}
+            event={{ ...event, lat: event.displayLat, lng: event.displayLng }}
             isActive={event.id === activeEventId}
             onClick={() => onEventClick(event)}
           />
