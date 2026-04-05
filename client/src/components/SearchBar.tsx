@@ -42,7 +42,7 @@ export default function SearchBar({ onSearch, isLoading }: Props) {
         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
         className="relative"
       >
-        <div className="flex items-center px-4 py-2.5 rounded-xl bg-[#141414]/80 backdrop-blur-md border border-white/[0.06] hover:border-white/[0.1] focus-within:border-[#8b5cf6]/30 transition-colors duration-200">
+        <div className="flex items-center px-4 py-2.5 rounded-xl bg-[#141414]/80 backdrop-blur-md border border-white/[0.06] hover:border-white/[0.1] focus-within:border-[#5E6AD2]/30 transition-colors duration-200">
           <svg className="w-4 h-4 text-white/25 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3" strokeLinecap="round"/>
           </svg>
@@ -57,12 +57,12 @@ export default function SearchBar({ onSearch, isLoading }: Props) {
             className="bg-transparent w-full text-white/90 placeholder-white/20 outline-none text-[14px] font-light"
           />
           {isLoading && (
-            <div className="w-4 h-4 border-[1.5px] border-white/10 border-t-[#8b5cf6] rounded-full animate-spin ml-2" />
+            <div className="w-4 h-4 border-[1.5px] border-white/10 border-t-[#5E6AD2] rounded-full animate-spin ml-2" />
           )}
           {!isLoading && query && (
             <button
               onClick={() => handleSubmit()}
-              className="ml-2 px-3 py-1 bg-[#8b5cf6] hover:bg-[#7c3aed] rounded-md text-white text-[12px] font-medium transition-colors duration-150"
+              className="ml-2 px-3 py-1 bg-[#5E6AD2] hover:bg-[#4F5BC0] rounded-md text-white text-[12px] font-medium transition-colors duration-150"
             >
               Go
             </button>

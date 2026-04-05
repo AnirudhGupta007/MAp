@@ -25,7 +25,7 @@ const TYPE_LABELS: Record<string, { label: string; color: string }> = {
   battle: { label: "Battle", color: "#ef4444" },
   coronation: { label: "Coronation", color: "#f59e0b" },
   meeting: { label: "Meeting", color: "#6366f1" },
-  journey: { label: "Journey", color: "#8b5cf6" },
+  journey: { label: "Journey", color: "#5E6AD2" },
   achievement: { label: "Achievement", color: "#22c55e" },
   construction: { label: "Construction", color: "#f97316" },
 };
@@ -41,7 +41,7 @@ export default function GlowMarker({ event, isActive, onClick }: Props) {
     });
   };
 
-  const t = TYPE_LABELS[event.type] || { label: event.type, color: "#8b5cf6" };
+  const t = TYPE_LABELS[event.type] || { label: event.type, color: "#5E6AD2" };
 
   return (
     <Marker

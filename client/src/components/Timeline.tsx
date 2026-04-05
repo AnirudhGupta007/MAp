@@ -78,7 +78,7 @@ export default function Timeline({ events, activeEventId, onEventSelect }: Props
               className="absolute left-0 h-[2px] rounded-full transition-all duration-500 ease-out"
               style={{
                 width: `${((sorted[currentIndex]?.year || minYear) - minYear) / range * 100}%`,
-                background: "linear-gradient(90deg, #8b5cf6, #6366f1)",
+                background: "linear-gradient(90deg, #5E6AD2, #7C6ADE)",
                 boxShadow: "0 0 6px rgba(139,92,246,0.3)",
               }}
             />
@@ -98,7 +98,7 @@ export default function Timeline({ events, activeEventId, onEventSelect }: Props
                     style={{
                       width: isActive ? 10 : event.highlight ? 8 : 6,
                       height: isActive ? 10 : event.highlight ? 8 : 6,
-                      background: isActive ? "#fff" : event.highlight ? "#f59e0b" : isPast ? "#8b5cf6" : "rgba(255,255,255,0.1)",
+                      background: isActive ? "#fff" : event.highlight ? "#f59e0b" : isPast ? "#5E6AD2" : "rgba(255,255,255,0.1)",
                       boxShadow: isActive ? "0 0 8px rgba(139,92,246,0.4)" : "none",
                     }}
                   />

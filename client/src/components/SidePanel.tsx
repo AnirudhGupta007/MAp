@@ -14,7 +14,7 @@ const TYPE_META: Record<string, { label: string; color: string }> = {
   battle: { label: "Battle", color: "#ef4444" },
   coronation: { label: "Coronation", color: "#f59e0b" },
   meeting: { label: "Meeting", color: "#6366f1" },
-  journey: { label: "Journey", color: "#8b5cf6" },
+  journey: { label: "Journey", color: "#5E6AD2" },
   achievement: { label: "Achievement", color: "#22c55e" },
   construction: { label: "Construction", color: "#f97316" },
 };
@@ -32,14 +32,14 @@ export default function SidePanel({ person, activeEvent, onClose, onEventSelect 
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: 380, opacity: 0 }}
         transition={{ duration: 0.4, ease }}
-        className="absolute top-0 right-0 bottom-0 w-[380px] z-[900] bg-[#0a0a0a] border-l border-white/[0.06] flex flex-col"
+        className="absolute top-0 right-0 bottom-0 w-[380px] z-[900] bg-[#050506] border-l border-white/[0.06] flex flex-col"
       >
         {/* Header */}
         <div className="p-5 pb-4 border-b border-white/[0.04]">
           <div className="flex items-start justify-between">
             <div>
               <h2 className="text-[18px] font-semibold text-white/92 tracking-tight">{person.person}</h2>
-              <p className="text-[12px] text-[#8b5cf6] mt-0.5 font-medium">{person.title}</p>
+              <p className="text-[12px] text-[#5E6AD2] mt-0.5 font-medium">{person.title}</p>
               <p className="text-[11px] text-white/25 mt-0.5 font-mono">{person.born} — {person.died}</p>
             </div>
             <button onClick={onClose} className="w-7 h-7 rounded-md bg-white/[0.03] hover:bg-white/[0.06] flex items-center justify-center text-white/30 hover:text-white/60 transition-colors duration-150 text-[12px]">
@@ -61,8 +61,8 @@ export default function SidePanel({ person, activeEvent, onClose, onEventSelect 
               className="mx-4 mt-4 p-4 rounded-lg bg-[#141414] border border-white/[0.04]"
             >
               <div className="flex items-center gap-2 mb-2">
-                <span className="w-1.5 h-1.5 rounded-full" style={{ background: TYPE_META[activeEvent.type]?.color || "#8b5cf6" }} />
-                <span className="text-[10px] font-medium tracking-wider uppercase" style={{ color: TYPE_META[activeEvent.type]?.color || "#8b5cf6" }}>
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: TYPE_META[activeEvent.type]?.color || "#5E6AD2" }} />
+                <span className="text-[10px] font-medium tracking-wider uppercase" style={{ color: TYPE_META[activeEvent.type]?.color || "#5E6AD2" }}>
                   {TYPE_META[activeEvent.type]?.label || activeEvent.type}
                 </span>
                 <span className="text-[10px] text-white/20 font-mono ml-auto">{activeEvent.year}</span>
@@ -90,7 +90,7 @@ export default function SidePanel({ person, activeEvent, onClose, onEventSelect 
                 <div className="mt-3">
                   {activeEvent.links.map((link, i) => (
                     <a key={i} href={link} target="_blank" rel="noopener noreferrer"
-                      className="text-[11px] text-[#8b5cf6]/70 hover:text-[#8b5cf6] transition-colors duration-150">
+                      className="text-[11px] text-[#5E6AD2]/70 hover:text-[#5E6AD2] transition-colors duration-150">
                       Read more ↗
                     </a>
                   ))}
@@ -107,14 +107,14 @@ export default function SidePanel({ person, activeEvent, onClose, onEventSelect 
           </p>
           {sorted.map((event) => {
             const isActive = activeEvent?.id === event.id;
-            const t = TYPE_META[event.type] || { label: event.type, color: "#8b5cf6" };
+            const t = TYPE_META[event.type] || { label: event.type, color: "#5E6AD2" };
             return (
               <button
                 key={event.id}
                 onClick={() => onEventSelect(event)}
                 className={`w-full text-left px-3 py-2.5 rounded-lg mb-0.5 transition-all duration-150 flex items-center gap-3 ${
                   isActive
-                    ? "bg-[#1a1a1a] border-l-2 border-l-[#8b5cf6]"
+                    ? "bg-[#1a1a1a] border-l-2 border-l-[#5E6AD2]"
                     : "hover:bg-[#141414] border-l-2 border-l-transparent"
                 }`}
               >

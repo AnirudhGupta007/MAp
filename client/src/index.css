@@ -2,19 +2,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 :root {
-  --base: #0a0a0a;
-  --surface: #141414;
-  --surface-2: #1a1a1a;
+  --base: #050506;
+  --base-elevated: #0a0a0c;
+  --surface: #111113;
+  --surface-2: #191919;
   --border: rgba(255, 255, 255, 0.06);
   --border-hover: rgba(255, 255, 255, 0.1);
-  --text-1: rgba(255, 255, 255, 0.92);
-  --text-2: rgba(255, 255, 255, 0.55);
-  --text-3: rgba(255, 255, 255, 0.3);
-  --accent: #8b5cf6;
-  --accent-2: #6366f1;
+  --text-1: #EDEDEF;
+  --text-2: #8A8F98;
+  --text-3: rgba(255, 255, 255, 0.25);
+  --accent: #5E6AD2;
+  --accent-glow: rgba(94, 106, 210, 0.2);
   --highlight: #f59e0b;
   --radius: 12px;
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,6 +26,7 @@ body {
   color: var(--text-1);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
 }
 
 #root { min-height: 100vh; }
@@ -35,11 +37,11 @@ body {
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.12); }
 
-/* Glass (simplified) */
+/* Glass */
 .glass {
-  background: rgba(20, 20, 20, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
   border: 1px solid var(--border);
 }
 
@@ -86,12 +88,12 @@ body {
 
 /* Markers */
 @keyframes pulse-marker {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.3); }
-  50% { box-shadow: 0 0 0 6px rgba(139, 92, 246, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(94, 106, 210, 0.35); }
+  50% { box-shadow: 0 0 0 7px rgba(94, 106, 210, 0); }
 }
 @keyframes pulse-highlight {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.3); }
-  50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
 }
 
 .geo-marker {
@@ -99,23 +101,24 @@ body {
   height: 10px;
   border-radius: 50%;
   background: var(--accent);
-  border: 1.5px solid rgba(255,255,255,0.5);
+  border: 1.5px solid rgba(255,255,255,0.6);
   cursor: pointer;
-  transition: all 0.2s var(--ease);
+  transition: all 0.25s var(--ease);
   animation: pulse-marker 4s ease-in-out infinite;
 }
-.geo-marker:hover { transform: scale(1.4); }
+.geo-marker:hover { transform: scale(1.5); }
 .geo-marker.highlight {
   width: 12px;
   height: 12px;
   background: var(--highlight);
+  border-color: rgba(255,255,255,0.7);
   animation: pulse-highlight 3s ease-in-out infinite;
 }
 .geo-marker.active {
   background: #fff;
   border-color: var(--accent);
-  transform: scale(1.5);
-  box-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
+  transform: scale(1.6);
+  box-shadow: 0 0 16px rgba(94, 106, 210, 0.5);
 }
 
 /* Mono font utility */

@@ -60,7 +60,7 @@ function App() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, ease }}
-      className="relative h-screen w-screen overflow-hidden bg-[#0a0a0a]"
+      className="relative h-screen w-screen overflow-hidden bg-[#050506]"
     >
       <MapView events={person?.events || []} activeEventId={activeEvent?.id || null} onEventClick={handleEventClick} />
 
@@ -73,7 +73,7 @@ function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 2, ease: "easeInOut" }}
             className="absolute top-0 left-0 right-0 h-[2px] z-[1100] origin-left"
-            style={{ background: "linear-gradient(90deg, #8b5cf6, #6366f1)" }}
+            style={{ background: "linear-gradient(90deg, #5E6AD2, #6366f1)" }}
           />
         )}
       </AnimatePresence>
