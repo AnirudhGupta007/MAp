@@ -1,5 +1,5 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { useState, useRef } from "react";
 
 interface Props {
   onEnterApp: () => void;
@@ -8,269 +8,305 @@ interface Props {
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const FIGURES = [
-  { name: "Shivaji Maharaj", era: "1630–1680", events: 10, tag: "Maratha Empire" },
-  { name: "Akbar", era: "1542–1605", events: 9, tag: "Mughal Dynasty" },
-  { name: "Rani Lakshmibai", era: "1828–1858", events: 10, tag: "Indian Rebellion" },
-  { name: "Aurangzeb", era: "1618–1707", events: 10, tag: "Mughal Dynasty" },
-  { name: "Ashoka", era: "304–232 BCE", events: 9, tag: "Maurya Dynasty" },
-  { name: "Maharana Pratap", era: "1540–1597", events: 10, tag: "Rajput Kingdom" },
+  { name: "Shivaji Maharaj", era: "1630–1680", events: 10, tag: "Maratha Empire", emoji: "⚔️" },
+  { name: "Akbar", era: "1542–1605", events: 9, tag: "Mughal Dynasty", emoji: "👑" },
+  { name: "Rani Lakshmibai", era: "1828–1858", events: 10, tag: "Indian Rebellion", emoji: "🗡️" },
+  { name: "Aurangzeb", era: "1618–1707", events: 10, tag: "Mughal Dynasty", emoji: "🏰" },
+  { name: "Ashoka", era: "304–232 BCE", events: 9, tag: "Maurya Dynasty", emoji: "☸️" },
+  { name: "Maharana Pratap", era: "1540–1597", events: 10, tag: "Rajput Kingdom", emoji: "🐎" },
 ];
 
-export default function LandingPage({ onEnterApp }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: containerRef });
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+function InteractiveCard({ children, className }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useTransform(y, [-100, 100], [8, -8]), { stiffness: 300, damping: 30 });
+  const rotateY = useSpring(useTransform(x, [-100, 100], [-8, 8]), { stiffness: 300, damping: 30 });
 
-  const mapScale = useTransform(scrollYProgress, [0.05, 0.25], [0.92, 1]);
-  const mapOpacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
-  const mapBorderRadius = useTransform(scrollYProgress, [0.05, 0.3], [24, 0]);
+  const handleMouse = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    x.set(e.clientX - rect.left - rect.width / 2);
+    y.set(e.clientY - rect.top - rect.height / 2);
+  };
+
+  const handleLeave = () => { x.set(0); y.set(0); };
 
   return (
-    <div ref={containerRef} className="bg-[#050506] min-h-screen text-white selection:bg-[#5E6AD2]/30">
-      {/* Ambient gradient blobs */}
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={handleLeave}
+      style={{ rotateX, rotateY, transformPerspective: 800 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export default function LandingPage({ onEnterApp }: Props) {
+  const [activeStep, setActiveStep] = useState(0);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#ECFDF5] via-[#F0FDF4] to-white selection:bg-emerald-200/50 overflow-hidden">
+
+      {/* Green gradient mesh background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-[300px] -right-[200px] w-[800px] h-[800px] rounded-full opacity-[0.07]"
-          style={{ background: "radial-gradient(circle, #5E6AD2, transparent 70%)" }} />
-        <div className="absolute -bottom-[400px] -left-[300px] w-[900px] h-[900px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle, #8B5CF6, transparent 70%)" }} />
+        <div className="absolute -top-[400px] -right-[300px] w-[900px] h-[900px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(52,211,153,0.12), transparent 65%)" }} />
+        <div className="absolute top-[30%] -left-[200px] w-[600px] h-[600px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(16,185,129,0.08), transparent 65%)" }} />
+        <div className="absolute -bottom-[300px] right-[20%] w-[700px] h-[700px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(5,150,105,0.06), transparent 65%)" }} />
       </div>
 
       {/* ═══ NAVBAR ═══ */}
       <motion.nav
-        initial={{ opacity: 0, y: -10 }}
+        initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1, ease }}
-        className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.04]"
-        style={{ background: "rgba(5,5,6,0.8)", backdropFilter: "blur(16px)" }}
+        transition={{ duration: 0.5, ease }}
+        className="sticky top-0 z-50 border-b border-emerald-100/50"
+        style={{ background: "rgba(240,253,244,0.8)", backdropFilter: "blur(20px)" }}
       >
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 h-14">
+        <div className="max-w-5xl mx-auto flex items-center justify-between px-6 h-14">
           <div className="flex items-center gap-2.5">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#5E6AD2] to-[#8B5CF6] flex items-center justify-center">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-sm shadow-emerald-200">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
                 <circle cx="12" cy="10" r="3"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
               </svg>
             </div>
-            <span className="text-[14px] font-semibold tracking-[-0.01em]">GeoTimeline</span>
+            <span className="text-[15px] font-semibold text-emerald-950 tracking-tight">GeoTimeline</span>
           </div>
           <button
             onClick={onEnterApp}
-            className="h-8 px-4 rounded-lg bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.06] text-[12px] font-medium text-white/70 hover:text-white transition-all duration-200"
+            className="h-9 px-5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-[13px] font-medium transition-all duration-200 shadow-sm shadow-emerald-200 hover:shadow-md hover:shadow-emerald-200"
           >
-            Open App
+            Open App →
           </button>
         </div>
       </motion.nav>
 
       {/* ═══ HERO ═══ */}
-      <section className="relative pt-32 pb-4 px-6">
+      <section className="relative pt-20 md:pt-28 pb-8 px-6">
         <div className="max-w-3xl mx-auto text-center">
-          {/* Badge */}
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15, ease }}
-            className="inline-flex items-center gap-2 h-7 px-3 rounded-full border border-white/[0.06] bg-white/[0.03] mb-6"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.1, ease }}
+            className="inline-flex items-center gap-2 h-8 px-4 rounded-full bg-white border border-emerald-100 shadow-sm mb-8"
           >
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#5E6AD2] opacity-75" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#5E6AD2]" />
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative rounded-full h-2 w-2 bg-emerald-500" />
             </span>
-            <span className="text-[11px] tracking-[0.04em] text-white/40 font-medium">
-              Powered by AI
-            </span>
+            <span className="text-[12px] tracking-wide text-emerald-700 font-medium">AI-Powered Historical Explorer</span>
           </motion.div>
 
-          {/* Headline */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.25, ease }}
-            className="text-[56px] md:text-[72px] lg:text-[80px] font-semibold tracking-[-0.035em] leading-[1.05]"
+            transition={{ duration: 0.8, delay: 0.2, ease }}
+            className="text-[48px] md:text-[64px] lg:text-[72px] font-extrabold tracking-[-0.04em] leading-[1.05]"
           >
-            <span className="text-white/95">History on </span>
-            <span className="bg-gradient-to-r from-[#5E6AD2] via-[#7C6ADE] to-[#9F7AEA] bg-clip-text text-transparent">
-              the map
+            <span className="text-emerald-950">Explore history</span>
+            <br />
+            <span className="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">
+              on the map
             </span>
           </motion.h1>
 
-          {/* Subhead */}
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.4, ease }}
-            className="text-[17px] md:text-[18px] text-white/35 mt-5 leading-[1.6] max-w-xl mx-auto font-light"
+            className="text-[17px] md:text-[18px] text-emerald-800/50 mt-5 leading-[1.7] max-w-lg mx-auto"
           >
-            Search any historical figure. AI reconstructs their journey — battles,
-            coronations, meetings — and plays it on an interactive dark map.
+            Search any historical figure. AI generates their journey —
+            battles, coronations, meetings — on an interactive map.
           </motion.p>
 
-          {/* CTA */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.55, ease }}
-            className="mt-8 flex items-center justify-center gap-3"
+            className="mt-9 flex items-center justify-center gap-3"
           >
             <button
               onClick={onEnterApp}
-              className="h-11 px-7 rounded-[10px] bg-[#5E6AD2] hover:bg-[#6E7AE2] text-white text-[14px] font-medium transition-all duration-200 shadow-[0_0_20px_rgba(94,106,210,0.2)] hover:shadow-[0_0_30px_rgba(94,106,210,0.35)]"
+              className="h-12 px-8 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white text-[15px] font-semibold transition-all duration-300 shadow-lg shadow-emerald-200/50 hover:shadow-xl hover:shadow-emerald-300/50 hover:scale-[1.02] active:scale-[0.98]"
             >
               Start Exploring
             </button>
             <a
-              href="#figures"
-              className="h-11 px-5 rounded-[10px] border border-white/[0.06] hover:border-white/[0.12] text-[14px] text-white/40 hover:text-white/65 font-medium transition-all duration-200 flex items-center"
+              href="#features"
+              className="h-12 px-6 rounded-full bg-white border border-emerald-100 text-[14px] text-emerald-700 font-medium transition-all duration-200 flex items-center hover:border-emerald-200 hover:shadow-sm"
             >
-              View figures
+              Learn more ↓
             </a>
           </motion.div>
         </div>
 
-        {/* ═══ MAP PREVIEW ═══ */}
+        {/* ═══ INTERACTIVE MAP PREVIEW ═══ */}
         <motion.div
-          style={{ scale: mapScale, opacity: mapOpacity, borderRadius: mapBorderRadius }}
-          className="mt-16 max-w-5xl mx-auto overflow-hidden border border-white/[0.06]"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.7, ease }}
+          className="mt-16 max-w-4xl mx-auto"
         >
-          <div className="relative aspect-[16/9] bg-[#0a0a0c]">
-            {/* Dark map background with grid */}
-            <div className="absolute inset-0"
-              style={{
-                backgroundImage: "radial-gradient(circle at 45% 50%, #0e1117 0%, #050506 100%)",
-              }}
+          <InteractiveCard className="rounded-2xl overflow-hidden border border-emerald-100 shadow-2xl shadow-emerald-100/30 bg-white">
+            <div className="relative aspect-[16/9]"
+              style={{ background: "linear-gradient(135deg, #D1FAE5 0%, #ECFDF5 30%, #F0FDF4 60%, #D1FAE5 100%)" }}
             >
-              <div className="absolute inset-0 opacity-[0.04]"
+              {/* Grid */}
+              <div className="absolute inset-0 opacity-[0.08]"
                 style={{
-                  backgroundImage: "linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)",
-                  backgroundSize: "80px 80px",
-                }}
-              />
-              {/* Fake continent shapes */}
-              <div className="absolute top-[35%] left-[35%] w-40 h-32 rounded-[40%] bg-white/[0.015] blur-sm" />
-              <div className="absolute top-[25%] left-[50%] w-24 h-20 rounded-[35%] bg-white/[0.01] blur-sm" />
-              <div className="absolute top-[50%] left-[28%] w-16 h-24 rounded-[40%] bg-white/[0.01] blur-sm" />
-            </div>
-            {/* Overlay UI mockup */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
+                  backgroundImage: "linear-gradient(#059669 1px, transparent 1px), linear-gradient(90deg, #059669 1px, transparent 1px)",
+                  backgroundSize: "60px 60px",
+                }} />
+
+              {/* Continent-like shapes */}
+              <div className="absolute top-[30%] left-[32%] w-44 h-36 rounded-[40%] bg-emerald-300/15 blur-sm" />
+              <div className="absolute top-[22%] left-[52%] w-28 h-24 rounded-[35%] bg-emerald-400/10 blur-sm" />
+              <div className="absolute top-[55%] left-[26%] w-20 h-28 rounded-[40%] bg-emerald-300/10 blur-sm" />
+
+              {/* Animated markers */}
+              {[
+                { left: "32%", top: "42%", delay: 0.8, label: "Shivneri", highlight: false },
+                { left: "44%", top: "56%", delay: 1.0, label: "Pratapgad", highlight: false },
+                { left: "55%", top: "38%", delay: 1.2, label: "Agra", highlight: true },
+                { left: "38%", top: "50%", delay: 1.4, label: "Raigad", highlight: false },
+                { left: "62%", top: "48%", delay: 1.6, label: "Surat", highlight: false },
+              ].map((dot, i) => (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3, duration: 0.8, ease }}
+                  key={i}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: dot.delay, duration: 0.5, ease, type: "spring", bounce: 0.4 }}
+                  className="absolute flex flex-col items-center group cursor-pointer"
+                  style={{ left: dot.left, top: dot.top }}
                 >
-                  {/* Fake search bar */}
-                  <div className="mx-auto w-[340px] h-10 rounded-lg bg-[#141414]/90 backdrop-blur border border-white/[0.08] flex items-center px-3 gap-2 mb-6 shadow-2xl">
-                    <svg className="w-3.5 h-3.5 text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3" strokeLinecap="round"/>
-                    </svg>
-                    <span className="text-[13px] text-white/25">Search "Shivaji Maharaj"...</span>
-                  </div>
+                  <motion.div
+                    whileHover={{ scale: 1.8 }}
+                    className="w-3 h-3 rounded-full border-2 border-white shadow-md relative"
+                    style={{
+                      background: dot.highlight ? "#F59E0B" : "#059669",
+                      boxShadow: `0 0 12px ${dot.highlight ? "rgba(245,158,11,0.4)" : "rgba(5,150,105,0.3)"}`,
+                    }}
+                  >
+                    <span className="absolute inset-0 rounded-full animate-ping opacity-25"
+                      style={{ background: dot.highlight ? "#F59E0B" : "#10B981" }} />
+                  </motion.div>
+                  <span className="mt-1 text-[9px] font-medium text-emerald-700/40 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    {dot.label}
+                  </span>
+                </motion.div>
+              ))}
 
-                  {/* Animated dots on map */}
-                  {[
-                    { left: "30%", top: "45%", delay: 0.5 },
-                    { left: "42%", top: "55%", delay: 0.7 },
-                    { left: "38%", top: "35%", delay: 0.9 },
-                    { left: "55%", top: "40%", delay: 1.1 },
-                    { left: "48%", top: "60%", delay: 1.3 },
-                  ].map((dot, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: dot.delay, duration: 0.5, ease }}
-                      className="absolute w-2.5 h-2.5 rounded-full"
-                      style={{
-                        left: dot.left,
-                        top: dot.top,
-                        background: i === 2 ? "#F59E0B" : "#5E6AD2",
-                        boxShadow: `0 0 12px ${i === 2 ? "rgba(245,158,11,0.4)" : "rgba(94,106,210,0.4)"}`,
-                      }}
-                    >
-                      <span className="absolute inset-0 rounded-full animate-ping opacity-30"
-                        style={{ background: i === 2 ? "#F59E0B" : "#5E6AD2" }} />
-                    </motion.div>
-                  ))}
+              {/* Dashed connections */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                <motion.line x1="32%" y1="42%" x2="44%" y2="56%" stroke="#10B981" strokeWidth="1" strokeDasharray="4 4" opacity="0.2"
+                  initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 0.2 }} transition={{ delay: 1.5, duration: 1 }} />
+                <motion.line x1="44%" y1="56%" x2="55%" y2="38%" stroke="#10B981" strokeWidth="1" strokeDasharray="4 4" opacity="0.2"
+                  initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 0.2 }} transition={{ delay: 1.8, duration: 1 }} />
+                <motion.line x1="55%" y1="38%" x2="38%" y2="50%" stroke="#10B981" strokeWidth="1" strokeDasharray="4 4" opacity="0.2"
+                  initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 0.2 }} transition={{ delay: 2.1, duration: 1 }} />
+              </svg>
 
-                  {/* Dashed path between dots */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.15 }}>
-                    <motion.path
-                      d="M 30% 45% Q 36% 40% 42% 55% T 38% 35% T 55% 40% T 48% 60%"
-                      fill="none"
-                      stroke="#5E6AD2"
-                      strokeWidth="1"
-                      strokeDasharray="4 6"
-                      initial={{ pathLength: 0 }}
-                      whileInView={{ pathLength: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.8, duration: 2, ease: "easeInOut" }}
-                    />
-                  </svg>
+              {/* Mock search bar */}
+              <div className="absolute top-5 left-1/2 -translate-x-1/2">
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.6, ease }}
+                  className="flex items-center gap-2 h-9 px-4 rounded-full bg-white/90 backdrop-blur border border-emerald-100 shadow-lg shadow-emerald-100/20"
+                >
+                  <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3" strokeLinecap="round"/></svg>
+                  <span className="text-[12px] text-emerald-400">Search "Shivaji Maharaj"</span>
                 </motion.div>
               </div>
-            </div>
 
-            {/* Edge fades */}
-            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#050506] to-transparent" />
-            <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#050506] to-transparent" />
-          </div>
+              {/* Mock side panel hint */}
+              <motion.div
+                initial={{ x: 30, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 2, duration: 0.6, ease }}
+                className="absolute top-12 right-4 w-48 rounded-xl bg-white/90 backdrop-blur border border-emerald-100 p-3 shadow-lg"
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                  <span className="text-[9px] font-semibold text-amber-600 uppercase tracking-wider">Featured</span>
+                </div>
+                <p className="text-[11px] font-semibold text-emerald-900">Visit to Agra & Escape</p>
+                <p className="text-[9px] text-emerald-600/50 mt-0.5">1666 · Agra, UP</p>
+              </motion.div>
+            </div>
+          </InteractiveCard>
         </motion.div>
       </section>
 
-      {/* ═══ HOW IT WORKS ═══ */}
-      <section className="py-28 px-6">
+      {/* ═══ HOW IT WORKS — INTERACTIVE ═══ */}
+      <section id="features" className="py-28 px-6">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, ease }}
-            className="text-center mb-16"
+            className="text-center mb-14"
           >
-            <p className="text-[11px] tracking-[0.1em] uppercase text-[#5E6AD2]/60 font-medium mb-3">
-              How it works
-            </p>
-            <h2 className="text-[36px] md:text-[42px] font-semibold tracking-[-0.025em] text-white/90">
-              Three steps to discovery
+            <span className="text-[11px] font-semibold tracking-[0.12em] uppercase text-emerald-500 mb-2 block">How it works</span>
+            <h2 className="text-[36px] md:text-[42px] font-bold tracking-[-0.03em] text-emerald-950">
+              Three simple steps
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/[0.03] rounded-2xl overflow-hidden border border-white/[0.04]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {[
               {
                 step: "01",
                 title: "Search",
-                desc: "Type any historical figure's name. Our AI fetches their complete life journey.",
-                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3" strokeLinecap="round"/></svg>,
+                desc: "Type any historical figure. AI fetches their complete life journey in seconds.",
+                icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
+                color: "from-emerald-50 to-teal-50",
+                iconColor: "text-emerald-500",
               },
               {
                 step: "02",
-                title: "Explore",
-                desc: "Events appear as glowing markers on a dark map, connected by animated paths.",
-                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>,
+                title: "Explore the Map",
+                desc: "Events appear as glowing markers connected by animated paths. Fly between them.",
+                icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>,
+                color: "from-green-50 to-emerald-50",
+                iconColor: "text-green-500",
               },
               {
                 step: "03",
-                title: "Discover",
-                desc: "Click events for rich details — people involved, places, and historical context.",
-                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>,
+                title: "Discover Details",
+                desc: "Click events for rich context — people involved, places, and historical links.",
+                icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>,
+                color: "from-teal-50 to-cyan-50",
+                iconColor: "text-teal-500",
               },
             ].map((item, i) => (
               <motion.div
                 key={item.step}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5, ease }}
-                className="bg-[#0a0a0c] p-8 relative group"
+                onMouseEnter={() => setActiveStep(i)}
+                className={`relative p-6 rounded-2xl border transition-all duration-300 cursor-default group ${
+                  activeStep === i
+                    ? "bg-gradient-to-br " + item.color + " border-emerald-200 shadow-lg shadow-emerald-100/30 scale-[1.02]"
+                    : "bg-white border-emerald-50 hover:border-emerald-100 hover:shadow-md hover:shadow-emerald-50"
+                }`}
               >
-                <div className="absolute top-8 right-8 text-[11px] font-mono text-white/10">{item.step}</div>
-                <div className="text-[#5E6AD2]/50 group-hover:text-[#5E6AD2] transition-colors duration-300 mb-5">
+                <div className="absolute top-5 right-5 text-[11px] font-mono text-emerald-300 font-medium">{item.step}</div>
+                <div className={`${item.iconColor} mb-4 transition-transform duration-300 ${activeStep === i ? "scale-110" : ""}`}>
                   {item.icon}
                 </div>
-                <h3 className="text-[16px] font-semibold text-white/85 mb-2 tracking-[-0.01em]">{item.title}</h3>
-                <p className="text-[13px] text-white/30 leading-[1.7] font-light">{item.desc}</p>
+                <h3 className="text-[16px] font-semibold text-emerald-900 mb-1.5">{item.title}</h3>
+                <p className="text-[13px] text-emerald-700/45 leading-[1.7]">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -278,27 +314,25 @@ export default function LandingPage({ onEnterApp }: Props) {
       </section>
 
       {/* ═══ FIGURES ═══ */}
-      <section id="figures" className="py-28 px-6">
+      <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, ease }}
-            className="text-center mb-16"
+            className="text-center mb-14"
           >
-            <p className="text-[11px] tracking-[0.1em] uppercase text-[#F59E0B]/50 font-medium mb-3">
-              Pre-loaded
-            </p>
-            <h2 className="text-[36px] md:text-[42px] font-semibold tracking-[-0.025em] text-white/90">
-              Ready to explore
+            <span className="text-[11px] font-semibold tracking-[0.12em] uppercase text-amber-500 mb-2 block">Ready to explore</span>
+            <h2 className="text-[36px] md:text-[42px] font-bold tracking-[-0.03em] text-emerald-950">
+              Pick a legend
             </h2>
-            <p className="text-[15px] text-white/30 mt-3 font-light">
-              These figures are cached and load instantly. Search anyone else — AI generates it live.
+            <p className="text-[15px] text-emerald-800/40 mt-3">
+              Pre-cached and instant. Or search anyone — AI generates it live.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {FIGURES.map((fig, i) => (
               <motion.button
                 key={fig.name}
@@ -307,41 +341,35 @@ export default function LandingPage({ onEnterApp }: Props) {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.06, duration: 0.5, ease }}
                 onClick={onEnterApp}
-                onMouseEnter={() => setHoveredIdx(i)}
-                onMouseLeave={() => setHoveredIdx(null)}
-                className="relative group text-left p-5 rounded-xl bg-[#0a0a0c] border border-white/[0.04] hover:border-[#5E6AD2]/20 transition-all duration-300 overflow-hidden"
+                whileHover={{ y: -4, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="group text-left p-5 rounded-2xl bg-white border border-emerald-50 hover:border-emerald-200 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-100/30"
               >
-                {/* Hover glow */}
-                {hoveredIdx === i && (
-                  <motion.div
-                    layoutId="figureHover"
-                    className="absolute inset-0 pointer-events-none"
-                    style={{ background: "radial-gradient(circle at 50% 50%, rgba(94,106,210,0.06), transparent 70%)" }}
-                    transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
-                  />
-                )}
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="text-[15px] font-medium text-white/80 group-hover:text-white/95 transition-colors">
-                      {fig.name}
-                    </span>
-                    <svg className="w-4 h-4 text-white/10 group-hover:text-[#5E6AD2]/60 transition-all duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-mono text-white/20">{fig.era}</span>
-                    <span className="text-white/[0.06]">·</span>
-                    <span className="text-[11px] text-[#5E6AD2]/40 font-medium">{fig.tag}</span>
-                  </div>
-                  <div className="mt-3 flex items-center gap-1.5">
-                    <span className="text-[10px] text-white/15 font-mono">{fig.events} events</span>
-                    <div className="flex gap-0.5">
-                      {Array.from({ length: Math.min(fig.events, 8) }).map((_, j) => (
-                        <div key={j} className="w-1 h-1 rounded-full bg-[#5E6AD2]/20" />
-                      ))}
-                    </div>
-                  </div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-2xl">{fig.emoji}</span>
+                  <svg className="w-4 h-4 text-emerald-200 group-hover:text-emerald-400 transition-all duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </div>
+                <p className="text-[15px] font-semibold text-emerald-900 group-hover:text-emerald-700 transition-colors">
+                  {fig.name}
+                </p>
+                <div className="flex items-center gap-2 mt-1.5">
+                  <span className="text-[11px] font-mono text-emerald-400">{fig.era}</span>
+                  <span className="w-1 h-1 rounded-full bg-emerald-200" />
+                  <span className="text-[11px] text-emerald-500/50">{fig.tag}</span>
+                </div>
+                <div className="mt-3 flex items-center gap-1">
+                  {Array.from({ length: Math.min(fig.events, 8) }).map((_, j) => (
+                    <motion.div
+                      key={j}
+                      className="w-1.5 h-1.5 rounded-full bg-emerald-200 group-hover:bg-emerald-300 transition-colors"
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      transition={{ delay: 0.1 + j * 0.03 }}
+                    />
+                  ))}
+                  <span className="text-[10px] text-emerald-300 ml-1">{fig.events}</span>
                 </div>
               </motion.button>
             ))}
@@ -350,34 +378,44 @@ export default function LandingPage({ onEnterApp }: Props) {
       </section>
 
       {/* ═══ BOTTOM CTA ═══ */}
-      <section className="py-32 px-6">
+      <section className="py-28 px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease }}
-          className="max-w-xl mx-auto text-center"
+          className="max-w-2xl mx-auto text-center"
         >
-          <h2 className="text-[40px] md:text-[48px] font-semibold tracking-[-0.03em] text-white/90 leading-[1.1]">
-            Ready to explore<br />the past?
-          </h2>
-          <p className="text-[15px] text-white/25 mt-4 font-light">
-            Search any historical figure and watch their story unfold on the map.
-          </p>
-          <button
-            onClick={onEnterApp}
-            className="mt-8 h-12 px-8 rounded-xl bg-gradient-to-r from-[#5E6AD2] to-[#7C6ADE] hover:from-[#6E7AE2] hover:to-[#8C7AEE] text-white text-[14px] font-medium transition-all duration-300 shadow-[0_0_32px_rgba(94,106,210,0.2)] hover:shadow-[0_0_48px_rgba(94,106,210,0.35)]"
-          >
-            Launch GeoTimeline →
-          </button>
+          <div className="p-12 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 relative overflow-hidden shadow-2xl shadow-emerald-200/40">
+            {/* Pattern overlay */}
+            <div className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
+                backgroundSize: "24px 24px",
+              }} />
+            <div className="relative">
+              <h2 className="text-[32px] md:text-[40px] font-bold tracking-[-0.03em] text-white leading-[1.15]">
+                Ready to explore<br />the past?
+              </h2>
+              <p className="text-[15px] text-white/60 mt-3">
+                Dive into centuries of history with a single search.
+              </p>
+              <button
+                onClick={onEnterApp}
+                className="mt-8 h-12 px-8 rounded-full bg-white text-emerald-700 text-[15px] font-semibold transition-all duration-300 hover:shadow-lg hover:scale-[1.03] active:scale-[0.98]"
+              >
+                Launch GeoTimeline →
+              </button>
+            </div>
+          </div>
         </motion.div>
       </section>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="border-t border-white/[0.04] py-6 px-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <span className="text-[11px] text-white/15 font-mono">GeoTimeline v1.0</span>
-          <span className="text-[11px] text-white/10">Built with AI</span>
+      <footer className="border-t border-emerald-100 py-6 px-6">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
+          <span className="text-[11px] text-emerald-400 font-mono">GeoTimeline v1.0</span>
+          <span className="text-[11px] text-emerald-300">Built with AI</span>
         </div>
       </footer>
     </div>

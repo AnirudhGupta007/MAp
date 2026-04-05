@@ -8,7 +8,7 @@ import SidePanel from "./components/SidePanel";
 import Timeline from "./components/Timeline";
 import type { PersonData, HistoricalEvent } from "./types";
 
-const ease = "easeOut" as const;
+const ease = [0.16, 1, 0.3, 1] as const;
 
 function App() {
   const [person, setPerson] = useState<PersonData | null>(null);
@@ -60,7 +60,7 @@ function App() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, ease }}
-      className="relative h-screen w-screen overflow-hidden bg-[#050506]"
+      className="relative h-screen w-screen overflow-hidden bg-[#F0FDF4]"
     >
       <MapView events={person?.events || []} activeEventId={activeEvent?.id || null} onEventClick={handleEventClick} />
 
@@ -72,8 +72,8 @@ function App() {
             animate={{ scaleX: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 2, ease: "easeInOut" }}
-            className="absolute top-0 left-0 right-0 h-[2px] z-[1100] origin-left"
-            style={{ background: "linear-gradient(90deg, #5E6AD2, #6366f1)" }}
+            className="absolute top-0 left-0 right-0 h-[3px] z-[1100] origin-left rounded-full"
+            style={{ background: "linear-gradient(90deg, #059669, #10B981, #34D399)" }}
           />
         )}
       </AnimatePresence>
@@ -84,7 +84,7 @@ function App() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
         onClick={handleBackToLanding}
-        className="absolute top-5 left-5 z-[1000] px-3 py-1.5 rounded-md bg-[#141414]/80 backdrop-blur-md border border-white/[0.06] hover:border-white/[0.1] text-white/40 hover:text-white/70 transition-all duration-150 text-[12px] font-medium"
+        className="absolute top-5 left-5 z-[1000] px-4 py-2 rounded-full bg-white/90 backdrop-blur-xl border border-emerald-100 hover:border-emerald-200 text-emerald-600 hover:text-emerald-800 transition-all duration-200 text-[12px] font-medium shadow-sm shadow-emerald-100/20"
       >
         ← Home
       </motion.button>

@@ -51,10 +51,13 @@ export default function MapView({ events, activeEventId, onEventClick }: Props) 
   return (
     <div className="absolute inset-0">
       <MapContainer center={[22, 78]} zoom={5} zoomControl={true} attributionControl={false} style={{ height: "100%", width: "100%" }}>
-        <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" maxZoom={19} />
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          maxZoom={19}
+        />
         <FitBounds events={spreadEvents} />
         {polyline.length > 1 && (
-          <Polyline positions={polyline} pathOptions={{ color: "rgba(94,106,210,0.3)", weight: 1, opacity: 1, dashArray: "6 8", lineCap: "round" }} />
+          <Polyline positions={polyline} pathOptions={{ color: "#059669", weight: 2, opacity: 0.3, dashArray: "6 8", lineCap: "round" }} />
         )}
         {spreadEvents.map((event) => (
           <GlowMarker key={event.id} event={{ ...event, lat: event.displayLat, lng: event.displayLng }} isActive={event.id === activeEventId} onClick={() => onEventClick(event)} />
