@@ -53,15 +53,11 @@ export default function LandingHero({ onSearch, isLoading }: Props) {
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}
         >
-          {/* Badge */}
+          {/* Tagline */}
           <motion.div variants={fadeUp} transition={{ duration: 0.6 }}>
-            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200/50">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inset-0 rounded-full bg-teal-400 animate-ping opacity-75" />
-                <span className="relative rounded-full h-2 w-2 bg-teal-500" />
-              </span>
-              <span className="text-sm font-semibold text-teal-700 tracking-wide">AI-Powered Historical Explorer</span>
-            </div>
+            <span className="text-sm font-semibold tracking-widest uppercase text-teal-600/80">
+              AI-Powered Historical Explorer
+            </span>
           </motion.div>
 
           {/* Title */}
@@ -96,33 +92,29 @@ export default function LandingHero({ onSearch, isLoading }: Props) {
               {/* Glow effect behind */}
               <div className="absolute -inset-1 bg-gradient-to-r from-teal-500/20 via-cyan-400/20 to-emerald-400/20 rounded-[22px] opacity-0 group-focus-within:opacity-100 blur-lg transition-opacity duration-500" />
 
-              <div className="relative flex items-center bg-white rounded-2xl border border-stone-200 shadow-lg shadow-stone-200/40 group-focus-within:border-teal-400 group-focus-within:shadow-teal-100/60 transition-all duration-300">
-                <div className="pl-5 text-stone-300">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="m21 21-4.3-4.3" />
-                  </svg>
-                </div>
+              <div className="relative flex items-center bg-white rounded-2xl border border-stone-200 shadow-lg shadow-stone-200/40 group-focus-within:border-teal-400 group-focus-within:shadow-teal-100/60 transition-all duration-300 h-14 px-5 gap-4">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a8a29e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search any historical figure..."
-                  className="flex-1 h-14 px-4 bg-transparent text-stone-900 placeholder:text-stone-400 text-base outline-none"
+                  className="flex-1 h-full bg-transparent text-stone-900 placeholder:text-stone-400 text-base outline-none"
                   disabled={isLoading}
                 />
-                <div className="pr-2.5">
-                  <button
-                    type="submit"
-                    disabled={isLoading || !query.trim()}
-                    className="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center hover:bg-teal-700 active:scale-90 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14" />
-                      <path d="m12 5 7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  disabled={isLoading || !query.trim()}
+                  className="w-9 h-9 rounded-full bg-teal-600 text-white flex items-center justify-center hover:bg-teal-700 active:scale-90 transition-all disabled:opacity-20 disabled:cursor-not-allowed flex-shrink-0"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                  </svg>
+                </button>
               </div>
             </div>
           </motion.form>
