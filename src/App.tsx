@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import type { HistoricalEvent } from "./types";
 import type { Map as LeafletMap } from "leaflet";
 import { useSearch } from "./hooks/useSearch";
@@ -33,9 +33,7 @@ export default function App() {
   const handleEventSelect = (event: HistoricalEvent) => {
     setActiveEvent(event);
     setShowPanel(true);
-    // Small delay to let flyTo start, then position
     setTimeout(() => updatePanelPosition(event), 100);
-    // Update again after flyTo completes
     setTimeout(() => updatePanelPosition(event), 1400);
   };
 
@@ -50,7 +48,13 @@ export default function App() {
         {!person && !isLoading ? (
           <LandingHero key="landing" onSearch={handleSearch} isLoading={isLoading} error={error} />
         ) : (
-          <div key="app" className="h-full w-full relative">
+          <motion.div
+            key="app"
+            className="h-full w-full relative"
+            initial={{ opacity: 0, scale: 1.02 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
             <MapView
               events={person?.events || []}
               activeEvent={activeEvent}
@@ -83,21 +87,49 @@ export default function App() {
               )}
             </AnimatePresence>
 
-            {error && (
-              <div className="absolute top-20 left-1/2 -translate-x-1/2 bg-red-50 text-red-600 px-4 py-2 rounded-xl text-sm border border-red-200 shadow-sm z-[900]">
-                {error}
-              </div>
-            )}
+            {/* Error toast */}
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  className="absolute top-20 left-1/2 -translate-x-1/2 z-[900]"
+                  initial={{ y: -10, opacity: 0, scale: 0.95 }}
+                  animate={{ y: 0, opacity: 1, scale: 1 }}
+                  exit={{ y: -10, opacity: 0, scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                >
+                  <div className="glass-strong px-5 py-2.5 rounded-xl text-sm text-red-600 border border-red-100/60 shadow-lg font-medium">
+                    {error}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            {isLoading && (
-              <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-[1000]">
-                <div className="flex flex-col items-center gap-3">
-                  <div className="w-10 h-10 border-3 border-stone-200 border-t-teal-600 rounded-full animate-spin" />
-                  <span className="text-stone-500 text-sm font-medium">Exploring history...</span>
-                </div>
-              </div>
-            )}
-          </div>
+            {/* Loading overlay */}
+            <AnimatePresence>
+              {isLoading && (
+                <motion.div
+                  className="absolute inset-0 bg-white/50 backdrop-blur-md flex items-center justify-center z-[1000]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <motion.div
+                    className="flex flex-col items-center gap-4"
+                    initial={{ scale: 0.9, y: 10 }}
+                    animate={{ scale: 1, y: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  >
+                    <div className="relative">
+                      <div className="w-10 h-10 border-[2.5px] border-stone-100 border-t-teal-500 rounded-full animate-spin" />
+                      <div className="absolute inset-0 w-10 h-10 border-[2.5px] border-transparent border-b-teal-300/40 rounded-full animate-spin" style={{ animationDirection: "reverse", animationDuration: "1.5s" }} />
+                    </div>
+                    <span className="text-stone-400 text-sm font-medium">Exploring history...</span>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

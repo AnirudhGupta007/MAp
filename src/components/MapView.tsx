@@ -73,10 +73,11 @@ export default function MapView({ events, activeEvent, onEventClick, mapRef }: P
         <Polyline
           positions={polylinePoints}
           pathOptions={{
-            color: "#a8a29e",
+            color: "#0d9488",
             weight: 2,
-            dashArray: "6 8",
-            opacity: 0.6,
+            dashArray: "8 10",
+            opacity: 0.35,
+            lineCap: "round",
           }}
         />
       )}
