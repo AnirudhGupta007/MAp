@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { MapContainer, TileLayer, Polyline } from "react-leaflet";
+import { useEffect } from "react";
+import { MapContainer, TileLayer, Polyline, useMap } from "react-leaflet";
 import type { Map as LeafletMap } from "leaflet";
 import type { HistoricalEvent } from "../types";
 import { MAP_CENTER, MAP_ZOOM, TILE_URL, TILE_ATTRIBUTION } from "../lib/constants";
@@ -9,6 +9,7 @@ interface Props {
   events: HistoricalEvent[];
   activeEvent: HistoricalEvent | null;
   onEventClick: (event: HistoricalEvent) => void;
+  mapRef: React.MutableRefObject<LeafletMap | null>;
 }
 
 function spreadOverlapping(events: HistoricalEvent[]): HistoricalEvent[] {
@@ -34,17 +35,28 @@ function spreadOverlapping(events: HistoricalEvent[]): HistoricalEvent[] {
   return spread;
 }
 
-export default function MapView({ events, activeEvent, onEventClick }: Props) {
-  const mapRef = useRef<LeafletMap | null>(null);
+function MapRefSetter({ mapRef }: { mapRef: React.MutableRefObject<LeafletMap | null> }) {
+  const map = useMap();
+  useEffect(() => {
+    mapRef.current = map;
+  }, [map, mapRef]);
+  return null;
+}
+
+function FitBounds({ events }: { events: HistoricalEvent[] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (events.length > 0) {
+      const bounds = events.map((e) => [e.lat, e.lng] as [number, number]);
+      map.flyToBounds(bounds, { padding: [80, 80], duration: 1.5 });
+    }
+  }, [events, map]);
+  return null;
+}
+
+export default function MapView({ events, activeEvent, onEventClick, mapRef }: Props) {
   const spreadEvents = spreadOverlapping(events);
   const polylinePoints = spreadEvents.map((e) => [e.lat, e.lng] as [number, number]);
-
-  useEffect(() => {
-    if (mapRef.current && spreadEvents.length > 0) {
-      const bounds = spreadEvents.map((e) => [e.lat, e.lng] as [number, number]);
-      mapRef.current.flyToBounds(bounds, { padding: [60, 60], duration: 1.5 });
-    }
-  }, [events]);
 
   return (
     <MapContainer
@@ -52,8 +64,9 @@ export default function MapView({ events, activeEvent, onEventClick }: Props) {
       zoom={MAP_ZOOM}
       className="h-full w-full"
       zoomControl={true}
-      ref={mapRef}
     >
+      <MapRefSetter mapRef={mapRef} />
+      <FitBounds events={events} />
       <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} />
 
       {polylinePoints.length > 1 && (

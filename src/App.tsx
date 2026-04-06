@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AnimatePresence } from "motion/react";
 import type { HistoricalEvent } from "./types";
+import type { Map as LeafletMap } from "leaflet";
 import { useSearch } from "./hooks/useSearch";
 import LandingHero from "./components/LandingHero";
 import MapView from "./components/MapView";
@@ -12,20 +13,35 @@ export default function App() {
   const { person, isLoading, error, search } = useSearch();
   const [activeEvent, setActiveEvent] = useState<HistoricalEvent | null>(null);
   const [showPanel, setShowPanel] = useState(false);
+  const [panelPos, setPanelPos] = useState<{ x: number; y: number } | null>(null);
+  const mapRef = useRef<LeafletMap | null>(null);
 
   const handleSearch = async (name: string) => {
     setActiveEvent(null);
     setShowPanel(false);
+    setPanelPos(null);
     await search(name);
+  };
+
+  const updatePanelPosition = (event: HistoricalEvent) => {
+    if (mapRef.current) {
+      const point = mapRef.current.latLngToContainerPoint([event.lat, event.lng]);
+      setPanelPos({ x: point.x, y: point.y });
+    }
   };
 
   const handleEventSelect = (event: HistoricalEvent) => {
     setActiveEvent(event);
     setShowPanel(true);
+    // Small delay to let flyTo start, then position
+    setTimeout(() => updatePanelPosition(event), 100);
+    // Update again after flyTo completes
+    setTimeout(() => updatePanelPosition(event), 1400);
   };
 
   const handleClosePanel = () => {
     setShowPanel(false);
+    setPanelPos(null);
   };
 
   return (
@@ -39,6 +55,7 @@ export default function App() {
               events={person?.events || []}
               activeEvent={activeEvent}
               onEventClick={handleEventSelect}
+              mapRef={mapRef}
             />
 
             <SearchBar
@@ -56,17 +73,18 @@ export default function App() {
             )}
 
             <AnimatePresence>
-              {showPanel && activeEvent && person && (
+              {showPanel && activeEvent && person && panelPos && (
                 <EventPanel
                   person={person}
                   event={activeEvent}
+                  position={panelPos}
                   onClose={handleClosePanel}
                 />
               )}
             </AnimatePresence>
 
             {error && (
-              <div className="absolute top-20 left-1/2 -translate-x-1/2 bg-red-50 text-red-600 px-4 py-2 rounded-xl text-sm border border-red-200 shadow-sm">
+              <div className="absolute top-20 left-1/2 -translate-x-1/2 bg-red-50 text-red-600 px-4 py-2 rounded-xl text-sm border border-red-200 shadow-sm z-[900]">
                 {error}
               </div>
             )}
