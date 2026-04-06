@@ -34,7 +34,6 @@ Return this exact JSON structure:
 
 Include 8-15 major life events in chronological order. Ensure lat/lng coordinates are accurate real-world locations. Mark 2-3 events as highlighted. Include birth and death events.`;
 
-// Try to load from bundled cache files
 function loadBundledCache(name) {
   const key = name.toLowerCase().replace(/\s+/g, "_");
   try {
@@ -42,7 +41,7 @@ function loadBundledCache(name) {
     if (fs.existsSync(cacheFile)) {
       return JSON.parse(fs.readFileSync(cacheFile, "utf-8"));
     }
-  } catch (e) {
+  } catch {
     // ignore
   }
   return null;
@@ -64,11 +63,11 @@ export default async function handler(req, res) {
 
   const cacheKey = `geotimeline:${name.toLowerCase().replace(/\s+/g, "_")}`;
 
-  // 1. Check bundled cache (pre-generated JSON files)
+  // 1. Bundled cache
   const bundled = loadBundledCache(name);
   if (bundled) return res.json(bundled);
 
-  // 2. Check Upstash Redis cache
+  // 2. Upstash Redis
   const redis = getRedis();
   if (redis) {
     try {
@@ -79,7 +78,7 @@ export default async function handler(req, res) {
     }
   }
 
-  // 3. Fetch from OpenRouter
+  // 3. OpenRouter API
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) return res.status(500).json({ error: "OPENROUTER_API_KEY not set" });
 
@@ -98,7 +97,7 @@ export default async function handler(req, res) {
     let cleaned = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     const data = JSON.parse(cleaned);
 
-    // 4. Save to Redis (no expiry — persist forever)
+    // Cache in Redis
     if (redis) {
       try {
         await redis.set(cacheKey, data);
