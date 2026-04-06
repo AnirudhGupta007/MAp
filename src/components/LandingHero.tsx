@@ -48,25 +48,25 @@ export default function LandingHero({ onSearch, isLoading }: Props) {
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-6">
         <motion.div
-          className="flex flex-col items-center gap-10 max-w-2xl w-full"
+          className="flex flex-col items-center gap-8 max-w-2xl w-full"
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}
         >
           {/* Badge */}
           <motion.div variants={fadeUp} transition={{ duration: 0.6 }}>
-            <div className="relative inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 border border-stone-200/60 shadow-sm backdrop-blur-sm">
-              <div className="absolute inset-0 rounded-full shimmer-badge" />
-              <span className="relative w-2 h-2 rounded-full bg-teal-500">
-                <span className="absolute inset-0 rounded-full bg-teal-400 animate-ping" />
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200/50">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inset-0 rounded-full bg-teal-400 animate-ping opacity-75" />
+                <span className="relative rounded-full h-2 w-2 bg-teal-500" />
               </span>
-              <span className="relative text-sm font-medium text-stone-600">AI-Powered Historical Explorer</span>
+              <span className="text-sm font-semibold text-teal-700 tracking-wide">AI-Powered Historical Explorer</span>
             </div>
           </motion.div>
 
           {/* Title */}
           <motion.div
-            className="flex flex-col items-center gap-4"
+            className="flex flex-col items-center gap-5"
             variants={fadeUp}
             transition={{ duration: 0.6 }}
           >
@@ -94,11 +94,11 @@ export default function LandingHero({ onSearch, isLoading }: Props) {
           >
             <div className="relative group">
               {/* Glow effect behind */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-teal-500/20 via-cyan-400/20 to-emerald-400/20 rounded-[20px] opacity-0 group-focus-within:opacity-100 blur-lg transition-opacity duration-500" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-teal-500/20 via-cyan-400/20 to-emerald-400/20 rounded-[22px] opacity-0 group-focus-within:opacity-100 blur-lg transition-opacity duration-500" />
 
               <div className="relative flex items-center bg-white rounded-2xl border border-stone-200 shadow-lg shadow-stone-200/40 group-focus-within:border-teal-400 group-focus-within:shadow-teal-100/60 transition-all duration-300">
-                <div className="pl-5 pr-2 text-stone-400">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <div className="pl-5 text-stone-300">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="11" cy="11" r="8" />
                     <path d="m21 21-4.3-4.3" />
                   </svg>
@@ -108,17 +108,16 @@ export default function LandingHero({ onSearch, isLoading }: Props) {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search any historical figure..."
-                  className="flex-1 h-14 bg-transparent text-stone-900 placeholder:text-stone-400 text-base outline-none"
+                  className="flex-1 h-14 px-4 bg-transparent text-stone-900 placeholder:text-stone-400 text-base outline-none"
                   disabled={isLoading}
                 />
-                <div className="pr-2">
+                <div className="pr-2.5">
                   <button
                     type="submit"
                     disabled={isLoading || !query.trim()}
-                    className="h-10 px-5 rounded-xl bg-teal-600 text-white text-sm font-semibold flex items-center gap-1.5 hover:bg-teal-700 active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center hover:bg-teal-700 active:scale-90 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
                   >
-                    Explore
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14" />
                       <path d="m12 5 7 7-7 7" />
                     </svg>
@@ -130,7 +129,7 @@ export default function LandingHero({ onSearch, isLoading }: Props) {
 
           {/* Suggestion chips */}
           <motion.div
-            className="flex flex-wrap justify-center gap-2"
+            className="flex flex-wrap justify-center gap-2.5"
             variants={fadeUp}
             transition={{ duration: 0.6 }}
           >
@@ -138,81 +137,52 @@ export default function LandingHero({ onSearch, isLoading }: Props) {
               <motion.button
                 key={name}
                 onClick={() => onSearch(name)}
-                className="px-4 py-2 rounded-xl bg-white/70 backdrop-blur-sm border border-stone-200/60 text-stone-600 text-sm font-medium hover:bg-teal-50 hover:border-teal-300 hover:text-teal-700 transition-all shadow-sm"
-                whileHover={{ y: -3, scale: 1.03 }}
-                whileTap={{ scale: 0.96 }}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 + i * 0.05 }}
+                className="group relative px-4 py-2 rounded-full bg-white/70 backdrop-blur-sm border border-stone-200/60 text-stone-500 text-sm font-medium hover:text-teal-700 hover:border-teal-300 hover:bg-teal-50/80 transition-all duration-300 shadow-sm hover:shadow-md"
+                whileHover={{ y: -3, scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 + i * 0.06, type: "spring", stiffness: 400, damping: 25 }}
               >
-                {name}
+                <span className="flex items-center gap-1.5">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-40 group-hover:opacity-70 transition-opacity">
+                    <circle cx="12" cy="10" r="3" />
+                    <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7Z" />
+                  </svg>
+                  {name}
+                </span>
               </motion.button>
             ))}
           </motion.div>
 
-          {/* Feature cards */}
+          {/* Feature pills - horizontal centered */}
           <motion.div
-            className="flex gap-4 mt-2 w-full max-w-lg"
+            className="flex items-center justify-center gap-6 mt-2"
             variants={fadeUp}
             transition={{ duration: 0.6 }}
           >
             {[
-              {
-                icon: (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="m21 21-4.3-4.3" />
-                  </svg>
-                ),
-                label: "Search",
-                desc: "Any figure in history",
-                gradient: "from-teal-500 to-cyan-500",
-                bg: "bg-teal-50",
-              },
-              {
-                icon: (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="10" r="3" />
-                    <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7Z" />
-                  </svg>
-                ),
-                label: "Explore",
-                desc: "Events on the map",
-                gradient: "from-violet-500 to-purple-500",
-                bg: "bg-violet-50",
-              },
-              {
-                icon: (
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                  </svg>
-                ),
-                label: "Discover",
-                desc: "Travel through time",
-                gradient: "from-amber-500 to-orange-500",
-                bg: "bg-amber-50",
-              },
+              { icon: "M21 21l-4.3-4.3M11 19a8 8 0 100-16 8 8 0 000 16z", label: "Search", color: "#0d9488" },
+              { icon: "M12 21.7C17.3 17 20 13 20 10a8 8 0 10-16 0c0 3 2.7 7 8 11.7Z", label: "Explore", color: "#7c3aed" },
+              { icon: "M12 6v6l4 2M12 22a10 10 0 100-20 10 10 0 000 20z", label: "Discover", color: "#d97706" },
             ].map((step, i) => (
               <motion.div
                 key={step.label}
-                className="flex-1 group relative p-4 rounded-2xl bg-white/60 backdrop-blur-sm border border-stone-200/50 hover:border-stone-300 shadow-sm hover:shadow-md transition-all cursor-default"
-                whileHover={{ y: -4 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.0 + i * 0.1 }}
+                className="flex items-center gap-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.1 + i * 0.1 }}
               >
-                <div className={`w-10 h-10 rounded-xl ${step.bg} flex items-center justify-center mb-3`}>
-                  <div className={`bg-gradient-to-br ${step.gradient} bg-clip-text`}>
-                    <div className="text-teal-600" style={{ color: step.gradient.includes("violet") ? "#7c3aed" : step.gradient.includes("amber") ? "#d97706" : "#0d9488" }}>
-                      {step.icon}
-                    </div>
-                  </div>
+                {i > 0 && <div className="w-8 h-px bg-stone-200 -ml-4 mr-[-8px]" />}
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: step.color + "12" }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={step.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d={step.icon} />
+                  </svg>
                 </div>
-                <div className="text-sm font-bold text-stone-800 mb-0.5" style={{ fontFamily: "var(--font-display)" }}>
-                  {step.label}
-                </div>
-                <div className="text-xs text-stone-500 leading-relaxed">{step.desc}</div>
+                <span className="text-sm font-medium text-stone-500">{step.label}</span>
               </motion.div>
             ))}
           </motion.div>
