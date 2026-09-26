@@ -52,8 +52,8 @@ function getRedis() {
     return null;
   }
   return new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    url: process.env.UPSTASH_REDIS_REST_URL.trim(),
+    token: process.env.UPSTASH_REDIS_REST_TOKEN.trim(),
   });
 }
 
@@ -79,7 +79,7 @@ export default async function handler(req, res) {
   }
 
   // 3. OpenRouter API
-  const apiKey = process.env.OPENROUTER_API_KEY;
+  const apiKey = process.env.OPENROUTER_API_KEY?.trim();
   if (!apiKey) return res.status(500).json({ error: "OPENROUTER_API_KEY not set" });
 
   try {
@@ -89,7 +89,7 @@ export default async function handler(req, res) {
     });
 
     const result = await client.chat.completions.create({
-      model: "google/gemini-2.0-flash-001",
+      model: "google/gemini-2.5-flash",
       messages: [{ role: "user", content: PROMPT_TEMPLATE(name) }],
     });
 
